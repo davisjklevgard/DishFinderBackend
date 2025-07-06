@@ -1,4 +1,4 @@
-package com.example.dishfinder.resource;
+package com.example.dishfinder.controller;
 
 import com.example.dishfinder.model.User;
 import com.example.dishfinder.repo.UserRepository;

@@ -1,6 +1,7 @@
-package com.example.dishfinder.resource;
+package com.example.dishfinder.controller;
 
 import com.example.dishfinder.model.Dish;
+import com.example.dishfinder.dto.DishDTO;
 import com.example.dishfinder.repo.DishRepository;
 import com.example.dishfinder.repo.RestaurantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/dishes")
@@ -25,12 +27,23 @@ public class DishController {
         return dishRepository.findAll();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Dish> getDishById(@PathVariable Long id) {
-        return dishRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+
+    @GetMapping("/dishes/{id}")
+    public ResponseEntity<DishDTO> getDishById(@PathVariable Long id) {
+        Optional<Dish> dish = dishRepository.findById(id);
+        if (dish.isPresent()) {
+            Dish d = dish.get();
+            DishDTO dto = new DishDTO();
+            dto.setName(d.getName());
+            dto.setDescription(d.getDescription());
+            dto.setOverallScore(d.getOverallScore());
+            // Set other fields EXCEPT id
+            return ResponseEntity.ok(dto);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
+
 
     @GetMapping("/restaurant/{restaurantId}")
     public List<Dish> getDishesByRestaurant(@PathVariable Long restaurantId) {
