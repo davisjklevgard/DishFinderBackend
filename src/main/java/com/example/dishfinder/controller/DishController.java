@@ -28,7 +28,7 @@ public class DishController {
     }
 
 
-    @GetMapping("/dishes/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<DishDTO> getDishById(@PathVariable Long id) {
         Optional<Dish> dish = dishRepository.findById(id);
         if (dish.isPresent()) {
